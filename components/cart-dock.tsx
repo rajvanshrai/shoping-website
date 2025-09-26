@@ -36,7 +36,8 @@ export function CartDock() {
     setCartOpen(true)
   }
 
-  const handleProfileClick = () => {
+  const handleProfileClick = (e: React.MouseEvent) => {
+    e.stopPropagation() // prevent opening checkout when clicking profile
     if (user) {
       logout()
     } else {
@@ -64,9 +65,7 @@ export function CartDock() {
             animate={{ scale: 1, opacity: 1 }}
             className="flex items-center justify-center h-full"
           >
-            <Button onClick={handleCartClick} variant="ghost" size="icon" className="rounded-full hover:bg-white/10">
-              <ShoppingCart className="h-6 w-6 text-white" />
-            </Button>
+            <ShoppingCart className="h-6 w-6 text-white" />
           </motion.div>
         )
 
@@ -77,11 +76,7 @@ export function CartDock() {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center gap-4 px-4 h-full"
           >
-            <Button
-              onClick={handleCartClick}
-              variant="ghost"
-              className="flex items-center gap-3 text-white hover:bg-white/10 rounded-full px-4 py-2"
-            >
+            <div className="relative flex items-center gap-3 text-white rounded-full px-4 py-2">
               <div className="relative">
                 <div className="bg-white/20 text-white rounded-full h-8 w-8 flex items-center justify-center text-sm font-bold">
                   {itemCount > 99 ? "99+" : itemCount}
@@ -103,7 +98,7 @@ export function CartDock() {
                   {itemCount} {itemCount === 1 ? "item" : "items"}
                 </div>
               </div>
-            </Button>
+            </div>
 
             <Button
               variant="ghost"
@@ -142,10 +137,11 @@ export function CartDock() {
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
         <motion.div
+          onClick={handleCartClick} // click anywhere opens checkout
           className={cn(
             "bg-gradient-to-r from-slate-800/95 via-slate-900/95 to-slate-800/95 text-white rounded-full",
             "shadow-lg backdrop-blur-md border border-white/10",
-            "transition-all duration-700 ease-out overflow-hidden",
+            "transition-all duration-700 ease-out overflow-hidden cursor-pointer",
             getDockDimensions(),
           )}
           layout
